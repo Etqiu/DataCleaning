@@ -10,6 +10,7 @@ def clean_text(text: str) -> str:
     # Remove common research paper patterns
     text = re.sub(r'\[\d+\]', '', text) # Remove citation brackets like [1]
     text = re.sub(r'\(.*?et al., \d{4}\)', '', text) # Remove author citations
+    # should probably also remove citation with paranthesis (author names etc)
     return text
 
 text_data = []
