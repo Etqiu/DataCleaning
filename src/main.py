@@ -3,6 +3,8 @@ import pytesseract
 import re  # regex 
 from PIL import Image
 import json 
+from gemini import questionGenerator as question 
+from gemini import answerGenerator as answer 
 
 def clean_text(text: str) -> str:
     text = re.sub(r'[^\w\s]', '', text) # Remove special characters
@@ -10,7 +12,10 @@ def clean_text(text: str) -> str:
     # Remove common research paper patterns
     text = re.sub(r'\[\d+\]', '', text) # Remove citation brackets like [1]
     text = re.sub(r'\(.*?et al., \d{4}\)', '', text) # Remove author citations
-    # should probably also remove citation with paranthesis (author names etc)
+    text = re.sub(r'^(Author:|Date:)\s.*$', '', text)
+    text = re.sub(r'Page \d of \d+', '', text) # remove page of # 
+    text = re.sub(r'https.*\s', ' ', text) ## remove httpss 
+
     return text
 
 text_data = []
@@ -18,11 +23,15 @@ with pdfplumber.open('data/A review of deep learning-based stereo vision techniq
     for i, page in enumerate(pdf.pages): 
         text = page.extract_text() 
         text = clean_text(text)
-
+        insert_question = question(text)
+        if i == 2: 
+            break
         page_data = {
             "text": text, 
+            "question" : insert_question,
+            "answer": answer(insert_question),
+            "source": 'A review of deep learning-based stereo vision techniques.pdf',
             "metadata": {
-                "source": 'A review of deep learning-based stereo vision techniques.pdf',
                 "section": f'Page {1 + i}'
                          }
         }
