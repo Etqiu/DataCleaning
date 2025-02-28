@@ -27,3 +27,5 @@ build/
 
 # System files
 .DS_Store 
+
+config.py

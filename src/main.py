@@ -6,6 +6,7 @@ import json
 from gemini import questionGenerator as question 
 from gemini import answerGenerator as answer 
 
+
 def clean_text(text: str) -> str:
     text = re.sub(r'[^\w\s]', '', text) # Remove special characters
     text = re.sub(r'\s+', ' ', text).strip() # Normalize whitespace
@@ -14,7 +15,7 @@ def clean_text(text: str) -> str:
     text = re.sub(r'\(.*?et al., \d{4}\)', '', text) # Remove author citations
     text = re.sub(r'^(Author:|Date:)\s.*$', '', text)
     text = re.sub(r'Page \d of \d+', '', text) # remove page of # 
-    text = re.sub(r'https.*\s', ' ', text) ## remove httpss 
+   ## text = re.sub(r'https?[^ ]*', '', text) ## remove https
 
     return text
 

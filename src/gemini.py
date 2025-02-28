@@ -1,7 +1,7 @@
 from google import genai
 from google.genai import types
-
-client = genai.Client(api_key="AIzaSyBYgynwsUk3xEsksG7yF07ZuVfbketG-RM")
+from config import API_KEY
+client = genai.Client(api_key= API_KEY)
 
 
 
@@ -21,3 +21,5 @@ def answerGenerator(question: str) -> str:
         max_output_tokens=500)
     ) 
     return response.text
+
+print(answerGenerator('hello!'))
