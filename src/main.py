@@ -5,7 +5,10 @@ from PIL import Image
 import json 
 from gemini import questionGenerator as question 
 from gemini import answerGenerator as answer 
+import time 
+import random 
 
+base_delay = 1
 
 def clean_text(text: str) -> str:
     text = re.sub(r'[^\w\s]', '', text) # Remove special characters
@@ -24,9 +27,11 @@ with pdfplumber.open('data/A review of deep learning-based stereo vision techniq
     for i, page in enumerate(pdf.pages): 
         text = page.extract_text() 
         text = clean_text(text)
-        insert_question = question(text)
-        if i == 2: 
+        insert_question = question(text[:1000]) # the first 1000 characters
+        if i == 30: # trying out 30 entries 
             break
+        time.sleep(5)
+
         page_data = {
             "text": text, 
             "question" : insert_question,
