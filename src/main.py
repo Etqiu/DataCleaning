@@ -3,7 +3,7 @@ import pytesseract
 import re  # regex 
 from PIL import Image
 import json 
-from gemini import questionGenerator as question 
+from gemini import generate_qa  
 from gemini import answerGenerator as answer 
 import time 
 import random 
@@ -27,15 +27,15 @@ with pdfplumber.open('data/A review of deep learning-based stereo vision techniq
     for i, page in enumerate(pdf.pages): 
         text = page.extract_text() 
         text = clean_text(text)
-        insert_question = question(text[:1000]) # the first 1000 characters
-        if i == 30: # trying out 30 entries 
-            break
-        time.sleep(5)
-
+        q_a = generate_qa(text[:1000]) # the first 1000 characters
+        ans = q_a[1]
+        ques = q_a[0] 
+        #if i == 30: # trying out 30 entries
+            #break
         page_data = {
             "text": text, 
-            "question" : insert_question,
-            "answer": answer(insert_question),
+            "question" : ques,
+            "answer": ans,
             "source": 'A review of deep learning-based stereo vision techniques.pdf',
             "metadata": {
                 "section": f'Page {1 + i}'
