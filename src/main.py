@@ -22,7 +22,8 @@ def clean_text(text: str) -> str:
     text = re.sub(r'\(.*?et al., \d{4}\)', '', text) # Remove author citations
     text = re.sub(r'^(Author:|Date:)\s.*$', '', text)
     text = re.sub(r'Page \d of \d+', '', text) # remove page of # 
-   ## text = re.sub(r'https?[^ ]*', '', text) ## remove https
+
+    text = re.sub(r'https?://\S+', '', text) # remove https and links
     text = text.strip()
     return text
 
@@ -39,20 +40,21 @@ def process_pdfs(pdf_files, output_json):
             for j, page in enumerate(pdf.pages): 
                 text = page.extract_text() 
                 text = clean_text(text)
-                #q_a = generate_qa(text[:1000]) # the first 1000 characters, generate q and a
-                #ans = q_a[1] 
-                #ques = q_a[0] 
-                #if j == 2: # trying out a few entries
-                 #   break
+                q_a = generate_qa(text[:1000]) # the first 1000 characters, generate q and a
+                ans = q_a[1] 
+                ques = q_a[0] 
+                if j == 2: # trying out a few entries
+                    # Uncomment the break if needed
+                    break  
                 page_data = {
-                   "text": text, 
-                  #  "question" : ques,
-                   # "answer": ans,
-                 "source": str(pdf.path),
+                    "text": text,
+                    "question": ques,
+                    "answer": ans,
                     "metadata": {
+                        "source": str(pdf.path),
                         "section": f'Page {1 + j}'
-                         }
-                }
+                        }
+                    }
                 text_data.append(page_data) 
 
             with open(pdf_name + ' ' +  output_json, 'w') as json_file:  # make new json file called text.json
@@ -64,7 +66,7 @@ def get_directory_pdfs(directory: str) -> list:
     """
     pdfs = []
     for pdf in os.listdir(directory):
-        pdfs.append(directory + pdf)
+        pdfs.append(directory + '/' + pdf)
     return pdfs
 
 def extract_as_md(pdf_path): 
