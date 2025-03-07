@@ -35,14 +35,13 @@ def generate_qa(text: str) -> str:
             return question, answer  # Return the generated question and answer as tuple
         except genai.errors.ClientError as e:
             if e.code == 429:  # Check for RESOURCE_EXHAUSTED error
-                wait_time = base_delay * (2 ** attempt) + random.uniform(0, 1)  # Exponential backoff with jitter
+                wait_time = base_delay * (2 ** attempt) #+ random.uniform(0, 1)  # Exponential backoff with jitter
                 print(f"Rate limit exceeded. Retrying in {wait_time:.2f} seconds...")
                 time.sleep(wait_time)  
                 print(f"Attempt: {attempt}, Base Delay: {base_delay}, Wait Time: {wait_time:.2f}")
-                base_delay = wait_time
             else:
                 print(f"An error occurred: {e}")
                 break  # Break the loop for other errors
-        print("Max retries exceeded. Request failed.")
-        return None, None 
+    print("Max retries exceeded. Request failed.")
+    return None, None 
     
