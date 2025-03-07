@@ -24,7 +24,6 @@ def generate_qa(text: str) -> str:
             )
             question = question_response.text.strip()
 
-            # Generate an answer based on the generated question
             answer_response = client.models.generate_content(
                 model="gemini-2.0-flash",
                 contents=f'Provide a short answer for the question with no new lines: {question}',
@@ -54,5 +53,3 @@ def answerGenerator(question: str) -> str:
         max_output_tokens=500)
     ) 
     return response.text
-
-print(answerGenerator('hello!'))

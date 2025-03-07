@@ -4,3 +4,4 @@ scikit-learn
 pdfplumber
 pytesseract
 Pillow
+pymupdf4llm
