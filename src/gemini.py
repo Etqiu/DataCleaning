@@ -10,7 +10,7 @@ client = genai.Client(api_key= API_KEY)
 def generate_qa(text: str) -> str:
     """Generate a Q-A based on text with max output tokens being 500"""
     max_retries = 5  # Maximum number of retries
-    base_delay = 1   # Base delay in seconds
+    base_delay = 1  # Base delay in seconds
 
     for attempt in range(max_retries):
         try:
@@ -38,18 +38,11 @@ def generate_qa(text: str) -> str:
                 wait_time = base_delay * (2 ** attempt) + random.uniform(0, 1)  # Exponential backoff with jitter
                 print(f"Rate limit exceeded. Retrying in {wait_time:.2f} seconds...")
                 time.sleep(wait_time)  
+                print(f"Attempt: {attempt}, Base Delay: {base_delay}, Wait Time: {wait_time:.2f}")
+                base_delay = wait_time
             else:
                 print(f"An error occurred: {e}")
                 break  # Break the loop for other errors
         print("Max retries exceeded. Request failed.")
         return None, None 
-
-def answerGenerator(question: str) -> str: 
-    time.sleep(1)
-    response =  client.models.generate_content(
-    model="gemini-2.0-flash",
-    contents=f'Write a short answer for this text, with no newlines:{question}', 
-    config=types.GenerateContentConfig(
-        max_output_tokens=500)
-    ) 
-    return response.text
+    

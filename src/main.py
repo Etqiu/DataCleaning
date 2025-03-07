@@ -4,7 +4,6 @@ import re  # regex
 from PIL import Image
 import json 
 from gemini import generate_qa  
-from gemini import answerGenerator as answer 
 import pymupdf4llm
 import time 
 import os
